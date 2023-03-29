@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import 'main_controller.dart';
 // By Arpit
 // Just Created a simple UI for calculator with 0-9 button and clear button for entering things.
 
@@ -44,12 +48,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<dynamic> text = [1,2,3,4,5,6,7,8,9,0,"Clear"];
-  String calcText = "";
 
+  final controller = Get.put(MainController());
 
   void _clearTextView() {
     setState(() {
-      calcText = "";
+      controller.calcText = "".obs;
     });
   }
 
@@ -65,9 +69,17 @@ class _MyHomePageState extends State<MyHomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
+            margin: EdgeInsets.only(left: 8,right: 8),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(width: 1),
+                borderRadius: BorderRadius.circular(15)),
               height: 100,
-              child: Text(calcText,style: TextStyle(color: Colors.black,height: 10),)),
-          Expanded(
+              width: double.infinity,
+              child:   Obx(() => Text(controller.calcText.value,style: TextStyle(color: Colors.black,height: 10),),
+              ),
+          ),
+                     Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               // implement GridView.builder
@@ -88,15 +100,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
                           child: Text(text[index].toString(),style: TextStyle(color: Colors.black),),
                         onTap: (){
-                          setState(() {
+                            debugPrint("ontap");
+
                             if(text[index].toString() == "Clear"){
                               _clearTextView();
                             }else{
-                              debugPrint("data " + index.toString() + " some" + text[index].toString());
-                              calcText =  calcText+text[index].toString();
+                              debugPrint("update");
+                             controller.setText(text[index].toString());
                             }
-
-                          });
 
                         },),
                     );
